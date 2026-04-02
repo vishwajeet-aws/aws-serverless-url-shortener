@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    p { color: #666; margin-bottom: 24px; }
+    input { width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box; }
+    button { padding: 10px 24px; background: #0066cc; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+    button:hover { background: #0052a3; }
+    #result { margin-top: 20px; padding: 14px; background: #f0f7ff; border-radius: 6px; display: none; }
+    #result a { color: #0066cc; word-break: break-all; }
+    #error { margin-top: 20px; padding: 14px; background: #fff0f0; color: #cc0000; border-radius: 6px; display: none; }
+  </style>
+</head>
+<body>
+  <h1>URL Shortener</h1>
+  <p>Paste any long URL and get a short link instantly.</p>
+
+  <input type="url" id="urlInput" placeholder="https://www.example.com/very/long/url" />
+  <button onclick="shortenUrl()">Shorten URL</button>
+
+  <div id="result">
+    <strong>Short URL:</strong><br>
+    <a id="shortLink" href="#" target="_blank"></a>
+  </div>
+
+  <div id="error"></div>
+
+  <script>
+    const API_URL = 'YOUR_API_GATEWAY_URL_HERE';
+
+    async function shortenUrl() {
+      const url = document.getElementById('urlInput').value;
+
+      if (!url) {
+        showError('Please enter a URL');
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL + '/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('shortLink').href = data.short_url;
+          document.getElementById('shortLink').textContent = data.short_url;
+          document.getElementById('result').style.display = 'block';
+          document.getElementById('error').style.display = 'none';
+        } else {
+          showError(data.error);
+        }
+
+      } catch (e) {
+        showError('Failed to connect to API');
+      }
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('error');
+      el.textContent = msg;
+      el.style.display = 'block';
+      document.getElementById('result').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
