@@ -1,4 +1,5 @@
-import json
+mkdir -p ../src/lambda
+nano ../src/lambda/handler.pyimport json
 import boto3
 import string
 import random
