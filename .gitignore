@@ -206,3 +206,15 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 venv/
+
+# … all your existing Python/Flask/Jupyter stuff above …
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+*.zip
